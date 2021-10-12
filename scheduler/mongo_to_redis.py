@@ -38,11 +38,8 @@ class Write_to_redis(object):
                 result['read'] = info['read']
                 result['hot_heat'] = info['hot_heat']
                 result['collections'] = info['collections']
-                self._redis.redis.set("news_detail:" + str(info['_id']), str(result))
+                self._redis.redis.set("news_detail:" + str(info['_id']), str(result))  # 添加进redis集合
                 self._redis.redis.set("news_title:" + str(info['_id']), str(result['title']))
-                self._redis.redis.set("news_date:" + str(info['_id']), str(result['news_date']))
-
-
 
                 if count % 50 == 0:
                     print(count)

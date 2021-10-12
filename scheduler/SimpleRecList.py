@@ -18,8 +18,8 @@ class SimpleRecList(object):
         count = 10000
         data = self._collection.find().sort([{"news_date", -1}])
         for news in data:
-            #print(str(news['_id']), str(news['news_date']))
-            self._redis.redis.zadd('rec_list_by_time', {str(news['_id']): count})
+            # print(str(news['_id']), str(news['news_date']))
+            self._redis.redis.zadd('rec_list_by_time', {str(news['_id']): count})  # 有序集合
             count -= 1
 
 

@@ -11,7 +11,7 @@ class MongoDB(object):
     def __init__(self, db):
         mongo_client = self._connect('127.0.0.1', '27017', '', '', db)
         self.db_client = mongo_client[db]
-        self.collection_test = self.db_client['test_collections']
+        # self.collection_test = self.db_client['test_collections']  #测试用
 
     def _connect(self, host, port, user, pwd, db):
         mongo_info = self._splicing(host, port, user, pwd, db)
