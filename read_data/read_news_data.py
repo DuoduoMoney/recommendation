@@ -20,4 +20,4 @@ class NewsData(object):
         self.content = self.db_client['content_labels']
 
     def cal_score(self):
-        pass
+        result = list()
