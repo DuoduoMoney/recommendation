@@ -30,7 +30,7 @@ class NewsData(object):
     def cal_score(self):
         result = list()
         score_dict = dict()
-        data = self.likes_collection.find()
+        data = self.read_collection.find()
         for info in data:
             # 这里面做分数的计算
             score_dict.setdefault(info['user_id'], {})
