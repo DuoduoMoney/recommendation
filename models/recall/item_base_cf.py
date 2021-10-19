@@ -4,6 +4,9 @@
 # @Author  : Rocket,Money
 # @Project : recommendation
 # @File    : item_base_cf.py
+from tqdm import tqdm
+import numpy as np
+
 
 class ItemBaseCf(object):
     def __init__(self, train_file):
@@ -36,7 +39,46 @@ class ItemBaseCf(object):
         基于item的协同过滤，计算相似度
         :return: 相似度矩阵{content_id?:{content_id:score}}
         """
-        pass
+        self.item_to_item, self.item_count = dict(), dict()
+
+        for user, items in self.items():
+            for i in items.keys():
+                self.item_count.setdefault(i, 0)
+                self.item_count[i] += 1
+
+        for user, items in self.train.items():
+            for i in items.keys():
+                self.item_to_item.setdefault(i, {})
+                for j in items.keys():
+                    if i == j:
+                        continue
+                    self.item_to_item[i].setdefault(j, 0)
+                    self.item_to_item[i][j] += 1 / (
+                        np.math.sqrt(self.item_count[i] + self.item_count[j]))  # item i  j 共现一次就加1
+
+        for _item in self.item_to_item:
+            self.item_to_item[_item] = dict(sorted(self.item_to_item[_item].items(),
+                                                   key=lambda x: x[1], reverse=True)[0:30])
 
     def cal_rec_item(self, user, N=50):
-        pass
+        """
+        给用户user推荐前N个感兴趣的文章
+        :param user:
+        :param N:
+        :return:  推荐的文章列表
+        """
+        rank = dict()
+        try:
+            action_item = self.train[user]
+            for item, score in action_item.items():
+                for j, wj in self.item_to_item[item].items():
+                    if j in action_item.keys():  # 如果j被阅读过了，那么就不会推荐了
+                        continue
+                    rank.setdefault(j, 0)
+                    rank[j] += score * wj / 10000 + 4  # 推过4次以后就不推了
+
+            res = dict(sorted(rank.items(), key=lambda x: x[1], reverse=True)[0:N])
+            return list(res)
+
+        except:
+            return {}
