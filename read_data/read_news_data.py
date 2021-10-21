@@ -33,7 +33,7 @@ class NewsData(object):
         data = self.read_collection.find()
         for info in data:
             # 这里面做分数的计算
-            score_dict.setdefault(info['user_id'], {})
+            score_dict.setdefault(info['user_id'], {})  # {user_id:{content_id:score}}形式
             score_dict[info['user_id']].setdefault(info['content_id'], 0)
 
             query = {"user_id": info['user_id'], "content_id": info['content_id']}
@@ -85,4 +85,5 @@ class NewsData(object):
 if __name__ == '__main__':
     news_data = NewsData()
     data = news_data.rec_user()
+    news_data.cal_score()
     print(data)
